@@ -7,17 +7,32 @@ import express, {
 } from "express";
 import createHttpError from "http-errors";
 import { config } from "dotenv";
+import mongoose from "mongoose";
+import * as bodyParser from "body-parser";
+import { routes } from "./routes/index";
+
+//To surpass the strictQuery deprecation warning
+mongoose.set("strictQuery", false);
+
+const PORT: Number = Number(process.env.PORT) || 3000;
+const app: Application = express();
+const db = require("./config/db");
 var morgan = require("morgan");
 var fs = require("fs");
 var path = require("path");
 
 config();
 
-const PORT: Number = Number(process.env.PORT) || 3000;
-const app: Application = express();
+//To process request body data
+app.use(bodyParser.json());
 
 //This will log all the requests
-app.use(morgan("common"));
+app.use(morgan("dev"));
+
+//Checking DB connection here
+db.once("open", function () {
+  console.log("MongoDB database connection established successfully");
+});
 
 // log all requests to access.log
 app.use(
@@ -28,9 +43,8 @@ app.use(
   })
 );
 
-app.get("/test", (req: Request, res: Response, next: NextFunction) => {
-  res.send("Hello from server..");
-});
+// routes
+app.use("/api", routes);
 
 //This middleware throws error if end point/url not found
 app.use((req: Request, res: Response, next: NextFunction) => {
