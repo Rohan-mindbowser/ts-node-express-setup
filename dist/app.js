@@ -32,6 +32,7 @@ const dotenv_1 = require("dotenv");
 const mongoose_1 = __importDefault(require("mongoose"));
 const bodyParser = __importStar(require("body-parser"));
 const index_1 = require("./routes/index");
+const logger_1 = __importDefault(require("./library/Logger/logger"));
 //To surpass the strictQuery deprecation warning
 mongoose_1.default.set("strictQuery", false);
 const PORT = Number(process.env.PORT) || 3000;
@@ -47,7 +48,7 @@ app.use(bodyParser.json());
 app.use(morgan("dev"));
 //Checking DB connection here
 db.once("open", function () {
-    console.log("MongoDB database connection established successfully");
+    logger_1.default.info("MongoDB database connection established successfully");
 });
 // log all requests to access.log
 app.use(morgan("common", {
@@ -59,6 +60,7 @@ app.use(morgan("common", {
 app.use("/api", index_1.routes);
 //This middleware throws error if end point/url not found
 app.use((req, res, next) => {
+    logger_1.default.warning("URL not found");
     next(new http_errors_1.default.NotFound("URL not found"));
 });
 //This middleware handles application error
@@ -68,5 +70,5 @@ const errorHandler = (error, req, res, next) => {
 };
 app.use(errorHandler);
 app.listen(PORT, () => {
-    console.log(`Server running on ${PORT}`);
+    logger_1.default.info(`Server running on PORT :${PORT}`);
 });

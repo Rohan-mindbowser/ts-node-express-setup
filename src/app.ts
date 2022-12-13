@@ -10,6 +10,7 @@ import { config } from "dotenv";
 import mongoose from "mongoose";
 import * as bodyParser from "body-parser";
 import { routes } from "./routes/index";
+import Logging from "./library/Logger/logger";
 
 //To surpass the strictQuery deprecation warning
 mongoose.set("strictQuery", false);
@@ -31,7 +32,7 @@ app.use(morgan("dev"));
 
 //Checking DB connection here
 db.once("open", function () {
-  console.log("MongoDB database connection established successfully");
+  Logging.info("MongoDB database connection established successfully");
 });
 
 // log all requests to access.log
@@ -48,6 +49,7 @@ app.use("/api", routes);
 
 //This middleware throws error if end point/url not found
 app.use((req: Request, res: Response, next: NextFunction) => {
+  Logging.warning("URL not found")
   next(new createHttpError.NotFound("URL not found"));
 });
 
@@ -60,5 +62,5 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server running on ${PORT}`);
+  Logging.info(`Server running on PORT :${PORT}`);
 });

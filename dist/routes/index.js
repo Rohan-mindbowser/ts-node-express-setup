@@ -7,4 +7,5 @@ exports.routes = void 0;
 const express_1 = __importDefault(require("express"));
 const userRoutes_1 = require("./user routes/userRoutes");
 exports.routes = express_1.default.Router();
+//All user routes
 exports.routes.use(userRoutes_1.userRoute);
