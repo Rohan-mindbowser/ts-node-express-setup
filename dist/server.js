@@ -17,6 +17,7 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const logger_1 = __importDefault(require("./library/Logger/logger"));
 const development_config_1 = require("./config/development.config");
 const dotenv_1 = require("dotenv");
+const index_1 = require("./routes/index");
 (0, dotenv_1.config)();
 const app = (0, express_1.default)();
 /** To surpass the strictQuery deprecation warning */
@@ -47,8 +48,16 @@ const StartServer = () => __awaiter(void 0, void 0, void 0, function* () {
         });
         app.use(express_1.default.urlencoded({ extended: true }));
         app.use(express_1.default.json());
+        // routes
+        app.use("/api", index_1.routes);
         /** Healthcheck */
         app.get("/test", (req, res, next) => res.status(200).json({ hello: "world" }));
+        //This middleware handles application error
+        const errorHandler = (error, req, res, next) => {
+            res.status(error.status || 500);
+            res.send({ status: error.status || 500, message: error.message });
+        };
+        app.use(errorHandler);
         /** Error handling */
         app.use((req, res, next) => {
             const error = new Error("Not found");

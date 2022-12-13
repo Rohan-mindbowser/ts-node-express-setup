@@ -1,8 +1,9 @@
-import express from "express";
+import express, { ErrorRequestHandler } from "express";
 import mongoose from "mongoose";
 import Logging from "./library/Logger/logger";
 import { config as devConfig } from "./config/development.config";
 import { config } from "dotenv";
+import { routes } from "./routes/index";
 config();
 
 const app = express();
@@ -45,10 +46,21 @@ const StartServer = async () => {
     app.use(express.urlencoded({ extended: true }));
     app.use(express.json());
 
+    // routes
+    app.use("/api", routes);
+
     /** Healthcheck */
     app.get("/test", (req, res, next) =>
       res.status(200).json({ hello: "world" })
     );
+
+    //This middleware handles application error
+    const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
+      res.status(error.status || 500);
+      res.send({ status: error.status || 500, message: error.message });
+    };
+
+    app.use(errorHandler);
 
     /** Error handling */
     app.use((req, res, next) => {
