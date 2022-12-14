@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = exports.addUser = void 0;
+exports.loginUser = exports.getUser = exports.addUser = void 0;
 const user_model_1 = require("../models/user.model");
 const http_errors_1 = __importDefault(require("http-errors"));
 const validateSchema_1 = require("../helper/validate schema/validateSchema");
+const jwtHelper_1 = require("../helper/jwt helper/jwtHelper");
 /** This controller adds new user */
 const addUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -26,7 +27,10 @@ const addUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         const validUser = yield validateSchema_1.validateSchema.validateAsync(req.body);
         const user = yield user_model_1.User.create(validUser);
         yield user.save();
-        res.status(201).send({ message: "Signup success..!!", success: true });
+        const accessToken = yield (0, jwtHelper_1.generateAccessToken)(user);
+        res
+            .status(201)
+            .send({ message: "Signup success..!!", success: true, accessToken });
     }
     catch (error) {
         next(error);
@@ -48,3 +52,20 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.getUser = getUser;
+/**This controller validates the user login */
+const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const validUser = yield validateSchema_1.validateSchema.validateAsync(req.body);
+        const user = yield user_model_1.User.findOne({ email: validUser.email });
+        if (!user)
+            throw http_errors_1.default.NotFound("User not found");
+        if (user.password !== validUser.password)
+            throw http_errors_1.default.BadRequest("Invalid email/password");
+        const accessToken = yield (0, jwtHelper_1.generateAccessToken)(user);
+        res.send({ success: true, accessToken });
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.loginUser = loginUser;

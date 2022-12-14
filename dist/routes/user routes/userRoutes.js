@@ -6,3 +6,4 @@ const userController_1 = require("../../controller/userController");
 exports.userRoute = (0, express_1.Router)();
 exports.userRoute.post("/adduser", userController_1.addUser);
 exports.userRoute.get("/getuser", userController_1.getUser);
+exports.userRoute.get("/loginuser", userController_1.loginUser);

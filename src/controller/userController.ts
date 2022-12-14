@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { User as userModel } from "../models/user.model";
 import createError from "http-errors";
 import { validateSchema } from "../helper/validate schema/validateSchema";
+import { generateAccessToken } from "../helper/jwt helper/jwtHelper";
 
 /** This controller adds new user */
 export const addUser = async (
@@ -19,7 +20,10 @@ export const addUser = async (
     const validUser = await validateSchema.validateAsync(req.body);
     const user = await userModel.create(validUser);
     await user.save();
-    res.status(201).send({ message: "Signup success..!!", success: true });
+    const accessToken = await generateAccessToken(user);
+    res
+      .status(201)
+      .send({ message: "Signup success..!!", success: true, accessToken });
   } catch (error) {
     next(error);
   }
@@ -38,6 +42,25 @@ export const getUser = async (
       return;
     }
     res.status(404).json({ message: "user not found", success: false });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**This controller validates the user login */
+export const loginUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const validUser = await validateSchema.validateAsync(req.body);
+    const user = await userModel.findOne({ email: validUser.email });
+    if (!user) throw createError.NotFound("User not found");
+    if (user.password !== validUser.password)
+      throw createError.BadRequest("Invalid email/password");
+    const accessToken = await generateAccessToken(user);
+    res.send({ success: true, accessToken });
   } catch (error) {
     next(error);
   }
