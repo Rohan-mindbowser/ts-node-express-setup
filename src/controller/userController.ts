@@ -2,7 +2,10 @@ import { Request, Response, NextFunction } from "express";
 import { User as userModel } from "../models/user.model";
 import createError from "http-errors";
 import { validateSchema } from "../helper/validate schema/validateSchema";
-import { generateAccessToken } from "../helper/jwt helper/jwtHelper";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../helper/jwt helper/jwtHelper";
 
 /** This controller adds new user */
 export const addUser = async (
@@ -21,9 +24,14 @@ export const addUser = async (
     const user = await userModel.create(validUser);
     await user.save();
     const accessToken = await generateAccessToken(user);
-    res
-      .status(201)
-      .send({ message: "Signup success..!!", success: true, accessToken });
+    const refreshToken = await generateRefreshToken(user);
+
+    res.status(201).send({
+      message: "Signup success..!!",
+      success: true,
+      accessToken,
+      refreshToken,
+    });
   } catch (error) {
     next(error);
   }
@@ -60,7 +68,9 @@ export const loginUser = async (
     if (user.password !== validUser.password)
       throw createError.BadRequest("Invalid email/password");
     const accessToken = await generateAccessToken(user);
-    res.send({ success: true, accessToken });
+    const refreshToken = await generateRefreshToken(user);
+
+    res.send({ success: true, accessToken, refreshToken });
   } catch (error) {
     next(error);
   }

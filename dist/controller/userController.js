@@ -28,9 +28,13 @@ const addUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         const user = yield user_model_1.User.create(validUser);
         yield user.save();
         const accessToken = yield (0, jwtHelper_1.generateAccessToken)(user);
-        res
-            .status(201)
-            .send({ message: "Signup success..!!", success: true, accessToken });
+        const refreshToken = yield (0, jwtHelper_1.generateRefreshToken)(user);
+        res.status(201).send({
+            message: "Signup success..!!",
+            success: true,
+            accessToken,
+            refreshToken,
+        });
     }
     catch (error) {
         next(error);
@@ -62,7 +66,8 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (user.password !== validUser.password)
             throw http_errors_1.default.BadRequest("Invalid email/password");
         const accessToken = yield (0, jwtHelper_1.generateAccessToken)(user);
-        res.send({ success: true, accessToken });
+        const refreshToken = yield (0, jwtHelper_1.generateRefreshToken)(user);
+        res.send({ success: true, accessToken, refreshToken });
     }
     catch (error) {
         next(error);
