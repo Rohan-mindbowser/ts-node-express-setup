@@ -1,7 +1,8 @@
 import express, { ErrorRequestHandler } from "express";
 import mongoose from "mongoose";
 import Logging from "./library/Logger/logger";
-import { config as devConfig } from "./config/development.config";
+// import { config as devConfig } from "./config/development.config";
+import { config as appConfig } from "./config/config";
 import { config } from "dotenv";
 import { routes } from "./routes/index";
 config();
@@ -13,7 +14,7 @@ mongoose.set("strictQuery", false);
 
 /** Connect to Mongo */
 mongoose
-  .connect(devConfig.mongo.url, {
+  .connect(appConfig.mongo.url, {
     retryWrites: true,
     w: "majority",
   })

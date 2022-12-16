@@ -15,7 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const logger_1 = __importDefault(require("./library/Logger/logger"));
-const development_config_1 = require("./config/development.config");
+// import { config as devConfig } from "./config/development.config";
+const config_1 = require("./config/config");
 const dotenv_1 = require("dotenv");
 const index_1 = require("./routes/index");
 (0, dotenv_1.config)();
@@ -24,7 +25,7 @@ const app = (0, express_1.default)();
 mongoose_1.default.set("strictQuery", false);
 /** Connect to Mongo */
 mongoose_1.default
-    .connect(development_config_1.config.mongo.url, {
+    .connect(config_1.config.mongo.url, {
     retryWrites: true,
     w: "majority",
 })

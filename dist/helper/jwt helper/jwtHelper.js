@@ -23,7 +23,7 @@ const generateAccessToken = (user) => __awaiter(void 0, void 0, void 0, function
         };
         const privateKey = process.env.ACCESS_TOKEN_SECRET;
         const options = {
-            expiresIn: "15m",
+            expiresIn: "1h",
             issuer: "node_backend",
             audience: String(user._id),
         };
