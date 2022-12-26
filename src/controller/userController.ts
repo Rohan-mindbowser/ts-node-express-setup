@@ -6,6 +6,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../helper/jwt helper/jwtHelper";
+import { RequestWithPagination } from "../types/response types";
 
 /** This controller adds new user */
 export const addUser = async (
@@ -71,6 +72,19 @@ export const loginUser = async (
     const refreshToken = await generateRefreshToken(user);
 
     res.send({ success: true, accessToken, refreshToken });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**THIS controller returns paginated users based on the limit and skip */
+export const paginatedUsers = async (
+  req: Request,
+  res: RequestWithPagination,
+  next: NextFunction
+) => {
+  try {
+    res.json(res.paginatedResults);
   } catch (error) {
     next(error);
   }

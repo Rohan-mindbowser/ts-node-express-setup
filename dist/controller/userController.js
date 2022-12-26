@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.getUser = exports.addUser = void 0;
+exports.paginatedUsers = exports.loginUser = exports.getUser = exports.addUser = void 0;
 const user_model_1 = require("../models/user.model");
 const http_errors_1 = __importDefault(require("http-errors"));
 const validateSchema_1 = require("../helper/validate schema/validateSchema");
@@ -74,3 +74,13 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
 });
 exports.loginUser = loginUser;
+/**THIS controller returns paginated users based on the limit and skip */
+const paginatedUsers = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        res.json(res.paginatedResults);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.paginatedUsers = paginatedUsers;
