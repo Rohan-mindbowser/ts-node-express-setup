@@ -42,6 +42,11 @@ const StartServer = () => __awaiter(void 0, void 0, void 0, function* () {
             /** Log the req */
             logger_1.default.info(`Incomming - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}]`);
             res.on("finish", () => {
+                if (res.statusCode >= 400 && res.statusCode <= 599) {
+                    /** Log the error res */
+                    logger_1.default.error(`Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`);
+                    return;
+                }
                 /** Log the res */
                 logger_1.default.info(`Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`);
             });

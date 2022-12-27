@@ -35,6 +35,13 @@ const StartServer = async () => {
       );
 
       res.on("finish", () => {
+        if (res.statusCode >= 400 && res.statusCode <= 599) {
+          /** Log the error res */
+          Logging.error(
+            `Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`
+          );
+          return;
+        }
         /** Log the res */
         Logging.info(
           `Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`
