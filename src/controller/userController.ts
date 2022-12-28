@@ -89,3 +89,16 @@ export const paginatedUsers = async (
     next(error);
   }
 };
+
+/**This controller handles photo upload */
+export const uploadPhoto = async (
+  req: Request,
+  res: RequestWithPagination,
+  next: NextFunction
+) => {
+  try {
+    res.send("upload done");
+  } catch (error) {
+    next(error);
+  }
+};

@@ -5,3 +5,6 @@ src/logs
 .env
 .env.development
 .env.production
+
+uploads
+upload
