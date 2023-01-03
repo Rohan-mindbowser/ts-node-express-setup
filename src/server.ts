@@ -5,9 +5,17 @@ import Logging from "./library/Logger/logger";
 import { config as appConfig } from "./config/config";
 import { config } from "dotenv";
 import { routes } from "./routes/index";
+const cors = require("cors");
 config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  })
+);
 
 /** To surpass the strictQuery deprecation warning */
 mongoose.set("strictQuery", false);

@@ -24,7 +24,7 @@ export const userRoute = Router();
 
 userRoute.post("/adduser", addUser);
 userRoute.get("/getuser", verifyAccessToken, getUser);
-userRoute.get("/loginuser", loginUser);
+userRoute.post("/loginuser", loginUser);
 userRoute.get(
   "/paginatedusers",
   verifyAccessToken,
