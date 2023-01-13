@@ -12,6 +12,11 @@ exports.config = {
     mongo: {
         url: MONGO_URL,
     },
+    postgres: {
+        db: process.env.PG_DB_NAME,
+        user: process.env.PG_USERNAME,
+        password: process.env.PG_PASSWORD,
+    },
     server: {
         port: SERVER_PORT,
     },
