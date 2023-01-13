@@ -19,8 +19,13 @@ const logger_1 = __importDefault(require("./library/Logger/logger"));
 const config_1 = require("./config/config");
 const dotenv_1 = require("dotenv");
 const index_1 = require("./routes/index");
+const cors = require("cors");
 (0, dotenv_1.config)();
 const app = (0, express_1.default)();
+app.use(cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+}));
 /** To surpass the strictQuery deprecation warning */
 mongoose_1.default.set("strictQuery", false);
 /** Connect to Mongo */
