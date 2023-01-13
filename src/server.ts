@@ -28,11 +28,10 @@ mongoose
   })
   .then(() => {
     Logging.info("Mongo connected successfully.");
-    StartServer();
   })
   .catch((error) => Logging.error(error));
 
-/** Only Start Server if Mongoose Connects */
+/** Server start */
 const StartServer = async () => {
   try {
     /** Log the request */
@@ -96,3 +95,4 @@ const StartServer = async () => {
     console.log(error);
   }
 };
+StartServer();
