@@ -4,3 +4,5 @@ import { allManagerControllers } from "../../controller/managerController/manage
 export const managerRoute = Router();
 
 managerRoute.post("/addmanager", allManagerControllers.addManager);
+managerRoute.get("/get-all-manager", allManagerControllers.getAllManager);
+managerRoute.patch("/update-manager", allManagerControllers.updateManager);
