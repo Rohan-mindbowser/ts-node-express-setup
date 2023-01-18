@@ -25,7 +25,7 @@ export const allManagerControllers = {
       const allManagers = await postgresDb.select().from("managers");
       res.status(200).send({
         status: 200,
-        data: allManagers,
+        data: allManagers.length !== 0 ? allManagers : "No Managers found",
       });
     } catch (error) {
       next(createError(500, "Something went wrong"));
@@ -34,12 +34,14 @@ export const allManagerControllers = {
   updateManager: async (req: Request, res: Response, next: NextFunction) => {
     try {
       let timeStamp = moment().format();
+      console.log(timeStamp);
       await postgresDb("managers")
         .where({
           mid: req.body.mid,
         })
         .update({
           name: req.body.name,
+          updated_at: timeStamp,
         });
       res.status(200).send({
         status: 200,
