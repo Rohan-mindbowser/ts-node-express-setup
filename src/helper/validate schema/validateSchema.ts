@@ -15,4 +15,5 @@ export const validateSchema = Joi.object({
 export const validateManagerSchema = Joi.object({
   name: Joi.string(),
   email: Joi.string().email(),
+  password: Joi.string(),
 });

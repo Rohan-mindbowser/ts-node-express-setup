@@ -8,7 +8,7 @@
     "dev": "npx tsc && cross-env NODE_ENV=development nodemon ./src/server.ts",
     "start": "npm run build && cross-env NODE_ENV=production node ./dist/server.js",
     "build": "rimraf ./build && tsc",
-    "migrate-dev": "npx cross-env NODE_ENV=development knex migrate:latest --knexfile src/knexfile.ts",
+    "migrate-latest": "npx cross-env NODE_ENV=development knex migrate:latest --knexfile src/knexfile.ts",
     "migrate:down": "npx cross-env NODE_ENV=development knex migrate:down --knexfile src/knexfile.ts"
   },
   "keywords": [],
@@ -25,6 +25,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "chalk": "^4.1.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

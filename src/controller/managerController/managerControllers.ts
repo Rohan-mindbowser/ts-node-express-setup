@@ -3,13 +3,20 @@ import createError from "http-errors";
 import { postgresDb } from "../../config/pgDbConnection";
 import { validateManagerSchema } from "../../helper/validate schema/validateSchema";
 import moment from "moment";
+const bcrypt = require("bcrypt");
 
 export const allManagerControllers = {
   addManager: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const validManager = await validateManagerSchema.validateAsync(req.body);
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(validManager.password, salt);
       const [mid] = await postgresDb("managers")
-        .insert(validManager)
+        .insert({
+          name: validManager.name,
+          email: validManager.email,
+          password: hashedPassword,
+        })
         .returning("mid");
       res.status(201).send({
         message: "Manager added..!!",
@@ -17,6 +24,7 @@ export const allManagerControllers = {
         manager_id: mid,
       });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   },
