@@ -1,5 +1,6 @@
 import express from "express";
 import { authRoute } from "./auth/auth";
+import { employeeRoute } from "./employe/employe";
 import { managerRoute } from "./manager/manager";
 import { userRoute } from "./user routes/userRoutes";
 
@@ -13,3 +14,6 @@ routes.use(authRoute);
 
 /**All manager routes */
 routes.use(managerRoute);
+
+/**All Employee routes */
+routes.use(employeeRoute);
