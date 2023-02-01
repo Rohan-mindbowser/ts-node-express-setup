@@ -49,7 +49,7 @@ app.use("/api", routes);
 
 //This middleware throws error if end point/url not found
 app.use((req: Request, res: Response, next: NextFunction) => {
-  Logging.warning("URL not found")
+  Logging.warning("URL not found");
   next(new createHttpError.NotFound("URL not found"));
 });
 
