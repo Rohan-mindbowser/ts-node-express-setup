@@ -3,6 +3,7 @@ import createError from "http-errors";
 import { postgresDb as knex } from "../../config/pgDbConnection";
 import { validateManagerSchema } from "../../helper/validate schema/validateSchema";
 import moment from "moment";
+import { sendEmails } from "../../helper/node mailer";
 const bcrypt = require("bcrypt");
 
 export const allManagerControllers = {
@@ -17,7 +18,16 @@ export const allManagerControllers = {
           email: validManager.email,
           password: hashedPassword,
         })
-        .returning("mid");
+        .returning(["mid", "email"]);
+      if (mid.email) {
+        await sendEmails({
+          email: mid.email,
+          subject: "Manager registered",
+          text: "Welcome ",
+          html: "<h1>Welcome</h1>",
+        });
+      }
+      console.log(typeof mid.email);
       res.status(201).send({
         message: "Manager added..!!",
         success: true,

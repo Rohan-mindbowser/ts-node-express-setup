@@ -18,4 +18,11 @@ export const config = {
   server: {
     port: SERVER_PORT,
   },
+  nodemailer: {
+    NODE_MAILER_HOST: process.env.NODE_MAILER_HOST,
+    NODE_MAILER_PORT: process.env.NODE_MAILER_PORT,
+    NODE_MAILER_USER: process.env.NODE_MAILER_USER,
+    NODE_MAILER_PASS: process.env.NODE_MAILER_PASS,
+    NODE_MAILER_FROM: process.env.NODE_MAILER_FROM,
+  },
 };
