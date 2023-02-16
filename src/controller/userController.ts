@@ -7,6 +7,12 @@ import {
   generateRefreshToken,
 } from "../helper/jwt helper/jwtHelper";
 import { RequestWithPagination } from "../types/response types";
+import { createClient } from "redis";
+import axios from "axios";
+
+const redisClient = createClient();
+
+const DEFAULT_EXPIRATION_TIME = 3600;
 
 /** This controller adds new user */
 export const addUser = async (
@@ -93,11 +99,37 @@ export const paginatedUsers = async (
 /**This controller handles photo upload */
 export const uploadPhoto = async (
   req: Request,
-  res: RequestWithPagination,
+  res: Response,
   next: NextFunction
 ) => {
   try {
     res.send("upload done");
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**This controller returns fake json data using redis */
+export const redisPhotos = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const value = await redisClient.get("photos");
+
+    if (value) {
+      console.log("Redis hit");
+      res.send(JSON.parse(value));
+      return;
+    }
+    console.log("Redis miss");
+
+    const { data } = await axios.get(
+      "https://jsonplaceholder.typicode.com/photos"
+    );
+    redisClient.setEx("photos", DEFAULT_EXPIRATION_TIME, JSON.stringify(data));
+    res.send(data);
   } catch (error) {
     next(error);
   }

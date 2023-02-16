@@ -4,6 +4,7 @@ import {
   getUser,
   loginUser,
   paginatedUsers,
+  redisPhotos,
   uploadPhoto,
 } from "../../controller/userController";
 import { verifyAccessToken } from "../../helper/jwt helper/jwtHelper";
@@ -32,3 +33,4 @@ userRoute.get(
   paginatedUsers
 );
 userRoute.post("/uploadphoto", upload.single("avatar"), uploadPhoto);
+userRoute.get("/get-all-photos", redisPhotos);

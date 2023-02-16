@@ -5,6 +5,9 @@ import Logging from "./library/Logger/logger";
 import { config as appConfig } from "./config/config";
 import { config } from "dotenv";
 import { routes } from "./routes/index";
+import { createClient } from "redis";
+
+const redisClient = createClient();
 const cors = require("cors");
 config();
 
@@ -88,7 +91,9 @@ const StartServer = async () => {
       });
     });
 
-    app.listen(process.env.PORT, () => {
+    app.listen(process.env.PORT, async () => {
+      await redisClient.connect();
+
       Logging.info(`Server running on PORT :${process.env.PORT}`);
     });
   } catch (error) {
