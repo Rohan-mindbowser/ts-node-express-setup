@@ -116,11 +116,12 @@ export const redisPhotos = async (
   next: NextFunction
 ) => {
   try {
+    redisClient.connect();
     const value = await redisClient.get("photos");
-
     if (value) {
       console.log("Redis hit");
       res.send(JSON.parse(value));
+      await redisClient.disconnect();
       return;
     }
     console.log("Redis miss");
@@ -130,6 +131,7 @@ export const redisPhotos = async (
     );
     redisClient.setEx("photos", DEFAULT_EXPIRATION_TIME, JSON.stringify(data));
     res.send(data);
+    await redisClient.quit();
   } catch (error) {
     next(error);
   }
