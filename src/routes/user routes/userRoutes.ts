@@ -34,3 +34,6 @@ userRoute.get(
 );
 userRoute.post("/uploadphoto", upload.single("avatar"), uploadPhoto);
 userRoute.get("/get-all-photos", redisPhotos);
+userRoute.get("/error", (req: any, res: any) => {
+  res.status(500).json({ error: "error" });
+});

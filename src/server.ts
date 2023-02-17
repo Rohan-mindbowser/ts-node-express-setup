@@ -5,11 +5,9 @@ import Logging from "./library/Logger/logger";
 import { config as appConfig } from "./config/config";
 import { config } from "dotenv";
 import { routes } from "./routes/index";
-import { createClient } from "redis";
-
-const redisClient = createClient();
-
+import { loggerMiddleware } from "./middleware/logger/winstonLogger";
 const cors = require("cors");
+
 config();
 
 const app = express();
@@ -38,6 +36,9 @@ mongoose
 /** Server start */
 const StartServer = async () => {
   try {
+    /**This middleware saves the error and warning logs  */
+    app.use(loggerMiddleware);
+
     /** Log the request */
     app.use((req, res, next) => {
       /** Log the req */
